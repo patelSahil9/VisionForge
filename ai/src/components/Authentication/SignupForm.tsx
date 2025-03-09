@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState, useId } from 'react'
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +14,7 @@ import {
   } from "@/components/ui/form"
   import { Input } from "@/components/ui/input"
 import { cn } from '@/lib/utils';
-
+import { toast } from "sonner";
 const passwordValidationRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 const formSchema = z.object({
@@ -40,6 +40,10 @@ const formSchema = z.object({
 })
 const SignupForm = ({className}:{className?:string}) => {
 
+  const [Loading, setLoading] = useState(false);
+
+  const toastId = useId();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -51,7 +55,10 @@ const SignupForm = ({className}:{className?:string}) => {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+      toast.loading("Signing up...", {id: toastId})
+      setLoading(true)
+      console.log(values)
+      // toast.success("Signup successful")
     }   
 
 
